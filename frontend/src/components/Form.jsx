@@ -68,6 +68,10 @@ const Form = () => {
                   className="form-input"
                 />
               </div>
+              <select className="form-input" {...register("accType")}>
+                <option value="Card">Card</option>
+                <option value="Cash">Cash</option>
+              </select>
               <div className="submit-btn">
                 <button className="border py-2 bg-indigo-500 w-full text-white">
                   Add

@@ -2,25 +2,10 @@ import React from "react";
 import "boxicons";
 import apiSlice from "../store/apiSlice";
 import Transaction from "./Transaction";
+import { CircularProgress } from "@mui/material";
 
 const List = () => {
-  const obj = [
-    {
-      name: "Savings",
-      color: "#f9c74f",
-    },
-    {
-      name: "Investment",
-      color: "#f9c74f",
-    },
-    {
-      name: "Expense",
-      color: "#9d4edd",
-    },
-  ];
-
-  const { data, isError, isFetching, isLoading, isSuccess } =
-    apiSlice.useGetLabelsQuery();
+  const { data, isError, isFetching, isSuccess } = apiSlice.useGetLabelsQuery();
 
   const [deleteTransaction] = apiSlice.useDeleteTransactionMutation();
 
@@ -31,7 +16,7 @@ const List = () => {
     await deleteTransaction(e.target.dataset.id);
   };
   if (isFetching) {
-    transaction = <div> Fetching</div>;
+    transaction = <CircularProgress color="success" />;
   } else if (isSuccess) {
     transaction = data?.map((value, index) => (
       <Transaction category={value} key={index} handler={handleDelete} />
@@ -42,7 +27,11 @@ const List = () => {
 
   return (
     <div className="flex flex-col py-6 gap-3">
-      <h1 className="py-4 font-bold text-xl">Recent Transaction</h1>
+      {data?.length ? (
+        <h1 className="py-4 font-bold text-xl">Recent Transactions</h1>
+      ) : (
+        <h1 className="text-gray-500">No trasactions found</h1>
+      )}
       {transaction}
     </div>
   );

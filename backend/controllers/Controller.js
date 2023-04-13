@@ -38,22 +38,18 @@ async function get_Categories(req, res) {
 //  post: http://localhost:8080/api/transaction
 async function create_Transaction(req, res) {
   if (!req.body) return res.status(400).json("Post HTTP Data not Provided");
-  let { name, type, amount } = req.body;
+  let { name, type, amount, accType } = req.body;
 
   const create = await new model.Transaction({
     name,
     type,
     amount,
+    accType,
     date: new Date(),
   });
 
   create.save();
   return res.json(create);
-  // else {
-  //   return res
-  //     .status(400)
-  //     .json({ message: `Erro while creating transaction ${err}` });
-  // }
 }
 
 //  get: http://localhost:8080/api/transaction
@@ -106,6 +102,7 @@ async function get_Labels(req, res) {
             amount: v.amount,
             color: v.categories_info["color"],
             date: v.date,
+            accType: v.accType,
           }
         )
       );

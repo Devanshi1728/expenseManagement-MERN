@@ -1,38 +1,26 @@
 import React, { useState } from "react";
 import apiSlice from "../store/apiSlice";
 import { getLabels } from "../helper/helper";
-import Transaction from "./Transaction";
+import { CircularProgress } from "@mui/material";
 
 const Labels = () => {
   const { data, isError, isFetching, isSuccess } = apiSlice.useGetLabelsQuery();
   let transaction;
-  // let innerTransaction;
-
-  console.log("data---", data);
 
   if (isFetching) {
-    transaction = <div> Fetching</div>;
+    transaction = <CircularProgress color="success" />;
   } else if (isSuccess) {
     const innerData = data?.map((item) => item);
     transaction = getLabels(data, "type")?.map((value, index) => (
       <LabelComponent key={index} data={value} item={innerData} />
     ));
-    // innerTransaction = data?.map((value, index) => (
-    //   <LabelComponent key={index} category={value} />
-    // ));
   } else if (isError) {
     transaction = <div>Error</div>;
   }
-  return (
-    <>
-      {transaction}
-      {/* {innerTransaction} */}
-    </>
-  );
+  return <>{transaction}</>;
 };
 
 const LabelComponent = ({ data, item }) => {
-  console.log("data here---", item);
   const { type, color, percent } = data;
   const [open, setOpen] = useState(false);
   const [filterData, setFilterData] = useState();
@@ -41,7 +29,6 @@ const LabelComponent = ({ data, item }) => {
     setOpen(!open);
     const newFiltered = item?.filter((value) => value?.type === data?.type);
     setFilterData(newFiltered);
-    console.log("new FilterData--", newFiltered);
   };
 
   if (!data) return <></>;
@@ -67,9 +54,13 @@ const LabelComponent = ({ data, item }) => {
           return (
             <div
               className="item flex bg-gray-50 py-3 ml-8"
-              style={{ borderRight: `8px solid ${data?.color}` }}
+              style={{
+                borderRight: `8px solid ${data?.color}`,
+                borderBottom: `1px solid ${color}`,
+              }}
             >
               <span className="block w-full">{data?.name}</span>
+              <span className="flex-end w-full">₹ {data?.amount}/-</span>
             </div>
           );
         })}

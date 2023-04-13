@@ -4,6 +4,7 @@ import { Chart, ArcElement } from "chart.js";
 import Labels from "./Labels";
 import { chartData, getSum } from "../helper/helper";
 import apiSlice from "../store/apiSlice";
+import { CircularProgress } from "@mui/material";
 
 Chart.register(ArcElement);
 const Graph = () => {
@@ -11,7 +12,7 @@ const Graph = () => {
   let graphData;
 
   if (isFetching) {
-    graphData = <div> Fetching</div>;
+    graphData = <CircularProgress color="success" />;
   } else if (isSuccess) {
     graphData = <Doughnut {...chartData(data)} />;
   } else if (isError) {
@@ -23,12 +24,16 @@ const Graph = () => {
       <div className="item">
         <div className="chart relative">
           {graphData}
-          <h3 className="mb-4 font-bold title">
-            Total
-            <span className="block text-3xl text-emerald-400">
-              Rs.{getSum(data) ?? 0}
-            </span>
-          </h3>
+          {data?.length ? (
+            <h3 className="mb-4 font-bold title">
+              Total
+              <span className="block text-3xl text-emerald-400">
+                Rs.{getSum(data) ?? 0}
+              </span>
+            </h3>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
 
